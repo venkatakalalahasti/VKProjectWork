@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/file/v2">
+    <pd:name>Test a file transfer scenario/File from C to D/File from A to B.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>102</pd:startX>
+    <pd:startY>111</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>549</pd:endX>
+    <pd:endY>110</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1566211364588</pd:targetNamespace>
+    <pd:activity name="Read from A">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:x>253</pd:x>
+        <pd:y>109</pd:y>
+        <config>
+            <encoding>text</encoding>
+        </config>
+        <pd:inputBindings>
+            <ns:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="&quot;D:\Sample Files\A\Venkata.txt&quot;"/>
+                </fileName>
+            </ns:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Write in B">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>398</pd:x>
+        <pd:y>113</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+        </config>
+        <pd:inputBindings>
+            <ns2:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="&quot;D:\Sample Files\B\Chaitanya.txt&quot;"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat($Read-from-A/ns2:ReadActivityOutputTextClass/fileContent/textContent, &quot;This is Chaitanya&quot;)"/>
+                </textContent>
+            </ns2:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Read from A</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Write in B</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Read from A</pd:from>
+        <pd:to>Write in B</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

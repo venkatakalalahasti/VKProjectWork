@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions">
+    <pd:name>JDBC/Process Definition.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="empid" type="xsd:string"/>
+                    <xsd:element name="empName" type="xsd:string"/>
+                    <xsd:element name="phone" type="xsd:string"/>
+                    <xsd:element name="Batch" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="empid" type="xsd:string"/>
+                                <xsd:element name="name" type="xsd:string"/>
+                                <xsd:element name="phone" type="xsd:string"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="DecisionTable" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>94</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <xsl:choose>
+            <xsl:when test="not(exists($JDBC-Query/resultSet/Record))">
+                <root>
+                    <empid>
+                        <xsl:value-of select="$Start/root/empid"/>
+                    </empid>
+                    <empname>
+                        <xsl:value-of select="$Start/root/empName"/>
+                    </empname>
+                    <phone>
+                        <xsl:value-of select="$Start/root/phone"/>
+                    </phone>
+                </root>
+            </xsl:when>
+            <xsl:otherwise>
+                <root>
+                    <empid>
+                        <xsl:value-of select="$JDBC-Query/resultSet/Record[1]/EMPID"/>
+                    </empid>
+                    <empname>
+                        <xsl:value-of select="$JDBC-Query/resultSet/Record[1]/EMPNAME"/>
+                    </empname>
+                    <phone>
+                        <xsl:value-of select="$JDBC-Query/resultSet/Record[1]/EMPPHONE"/>
+                    </phone>
+                </root>
+            </xsl:otherwise>
+        </xsl:choose>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="empid" type="xsd:string"/>
+                    <xsd:element name="empname" type="xsd:string"/>
+                    <xsd:element name="phone" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>680</pd:endX>
+    <pd:endY>123</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1566799693136</pd:targetNamespace>
+    <pd:activity name="JDBC Query">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>253</pd:x>
+        <pd:y>68</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>0</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>Select empid, empname, empphone from employee where empid=? </statement>
+            <QueryOutputCachedSchemaColumns>EMPID</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>2</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>NUMBER</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>EMPNAME</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>EMPPHONE</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>2</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>NUMBER</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+            <processInSubsets>false</processInSubsets>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>empID</parameterName>
+                    <dataType>INTEGER</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <empID>
+                    <xsl:value-of select="$Start/root/empid"/>
+                </empID>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="JDBC Update">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>255</pd:x>
+        <pd:y>176</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>insert into employee(empid, empname, empphone) values(?, ?, ?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>empid</parameterName>
+                    <dataType>INTEGER</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>empname</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>empphome</parameterName>
+                    <dataType>DOUBLE</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <batchUpdate>true</batchUpdate>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <xsl:for-each select="$Start/root/Batch">
+                    <Record>
+                        <empid>
+                            <xsl:value-of select="empid"/>
+                        </empid>
+                        <empname>
+                            <xsl:value-of select="name"/>
+                        </empname>
+                        <empphome>
+                            <xsl:value-of select="phone"/>
+                        </empphome>
+                    </Record>
+                </xsl:for-each>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>434</pd:x>
+        <pd:y>67</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns1:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('Data Present for empid',  $Start/root/empid)"/>
+                </message>
+            </ns1:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Log-1">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>439</pd:x>
+        <pd:y>172</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns1:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('Data created  for empid',  $Start/root/empid)"/>
+                </message>
+            </ns1:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SQL Direct">
+        <pd:type>com.tibco.plugin.jdbc.JDBCGeneralActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCGeneralActivity</pd:resourceType>
+        <pd:x>559</pd:x>
+        <pd:y>121</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+        </config>
+        <pd:inputBindings>
+            <jdbcGeneralActivityInput>
+                <statement>
+                    <xsl:value-of select="'create table employee11(empid number, empname varchar(20), empphone number)'"/>
+                </statement>
+            </jdbcGeneralActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>JDBC Query</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Query</pd:from>
+        <pd:to>JDBC Update</pd:to>
+        <pd:xpathDescription>Not Exists</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>not(exists($JDBC-Query/resultSet/Record))</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Query</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>SQL Direct</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Update</pd:from>
+        <pd:to>Log-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log-1</pd:from>
+        <pd:to>SQL Direct</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SQL Direct</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

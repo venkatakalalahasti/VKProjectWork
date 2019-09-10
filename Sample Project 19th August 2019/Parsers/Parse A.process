@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/file/v2">
+    <pd:name>Parsers/Parse A.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>35</pd:startX>
+    <pd:startY>71</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>595</pd:endX>
+    <pd:endY>73</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1566296271178</pd:targetNamespace>
+    <pd:activity name="Parse A">
+        <pd:type>com.tibco.plugin.parse.ParseActivity</pd:type>
+        <pd:resourceType>ae.activities.ParseActivity</pd:resourceType>
+        <pd:x>364</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <InputType>String</InputType>
+            <Encoding>ASCII</Encoding>
+            <ParseSharedConfig>/Parsers/Employee Format.sharedparse</ParseSharedConfig>
+        </config>
+        <pd:inputBindings>
+            <Input>
+                <text>
+                    <xsl:value-of select="$Read-A/ns1:ReadActivityOutputTextClass/fileContent/textContent"/>
+                </text>
+                <noOfRecords>
+                    <xsl:value-of select="-1"/>
+                </noOfRecords>
+            </Input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Read A">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:x>206</pd:x>
+        <pd:y>73</pd:y>
+        <config>
+            <encoding>text</encoding>
+        </config>
+        <pd:inputBindings>
+            <ns:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="&quot;D:\Sample Files\Parser Files\Employee 1.txt&quot;"/>
+                </fileName>
+            </ns:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Write File">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>492</pd:x>
+        <pd:y>78</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+        </config>
+        <pd:inputBindings>
+            <ns1:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="&quot;D:\Sample Files\Parser Files\EPass.txt&quot;"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat($Parse-A/Output/Rows/Employee-Data[2]/E-BGroup, $Parse-A/Output/Rows/Employee-Data[4]/E-ID)"/>
+                </textContent>
+            </ns1:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Read A</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Read A</pd:from>
+        <pd:to>Parse A</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse A</pd:from>
+        <pd:to>Write File</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Write File</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

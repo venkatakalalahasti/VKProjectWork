@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <name>Employee Format</name>
+    <resourceType>ae.shared.ParseSharedResource</resourceType>
+    <config xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <FormatType>Delimiter separated</FormatType>
+        <ColumnSeparator>,</ColumnSeparator>
+        <ColSeparatorRule>Treat all characters as entered as a single column separator string</ColSeparatorRule>
+        <LineSeparator>
+</LineSeparator>
+        <FillCharacter>Space</FillCharacter>
+        <LineLength>0</LineLength>
+        <OffsetString>E-Name(0,10)
+E-ID(2,9)
+E-Mob(0,9)
+E-Location(0,9)
+E-BGroup(0,0)</OffsetString>
+        <DataFormat>
+            <xsd:element name="Employee-Data">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="E-Name" type="xsd:string"/>
+                        <xsd:element name="E-ID" type="xsd:string"/>
+                        <xsd:element name="E-Mob" type="xsd:long"/>
+                        <xsd:element name="E-Location" type="xsd:string"/>
+                        <xsd:element name="E-BGroup" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </DataFormat>
+    </config>
+</BWSharedResource>

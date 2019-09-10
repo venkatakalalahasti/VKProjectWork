@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Sample Project 19th August 2019/Parsers/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Sample Project 19th August 2019/Parsers/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="EmployeeDataSch">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ENameSch"/>
+				<xs:element ref="EIDSch"/>
+				<xs:element ref="EMobSch"/>
+				<xs:element ref="ELocSch"/>
+				<xs:element ref="EBGroupSch"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ENameSch" type="xs:string"/>
+	<xs:element name="EIDSch" type="xs:string"/>
+	<xs:element name="EMobSch" type="xs:long"/>
+	<xs:element name="ELocSch" type="xs:string"/>
+	<xs:element name="EBGroupSch" type="xs:string"/>
+	<xs:element name="CompanySch">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="EmployeeDataSch" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
